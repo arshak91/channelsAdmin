@@ -1,0 +1,63 @@
+
+սարկել նոր պրոեկտ
+
+npm init
+{
+	main: "server.js"
+	scripts: {
+		"start": "node server.js"
+		"start:dev": "nodemon server.js"+
+	}
+}
+
+պրոեկտում ունենալ հետևյալ ստրուկտուրան
+
+newProject/
+	node_modules/
+	src/
+		routers/
+			carRouter.js
+			bikeRouter.js
+		controllers/
+			carsController.js
+			bikesController.js
+		middlewares/
+			validateOrderType.js
+		db/
+			cars.json
+			bikes.json
+	package.json
+	package-lock.json
+	server.js
+
+ունենալ middleware validateOrderType.js
+
+ստուգել order―ի ինֆոմացիան պարտադիր պիտի ունենա
+{
+	name: "", // "Mercedes G", "BMW", "Yamaha"
+	madeDate: "2015-10-25",
+	kilometer: 500,
+	price: 1000,
+	currency: "USD",
+	description: ""
+}
+
+ունենալ API_ներ
+carRouter.js ->
+	const validation = require("./validateOrderType") // օրինակ
+	const carController = require("./carsController") // օրինակ
+
+	․post("/cars", validation, carController.createCar)  // ավելացնել cars.json զանգվածի մեջ  ավտոմեքենա
+	․get("/cars", carController.getCars) // ստանալ բոլոր ավտոմեքենաները
+	.put("/cars/:id", validation, carController.updateCar)  // փոփոխել ավտոմեքենայի ինֆորմացիան ըստ body_ի
+	.delete("/cars/:id", carController.deleteCar)  // jnjel ավտոմեքենայի ինֆորմացիան ըստ body_ի
+	
+bikeRouter.js ->
+	const validation = require("./validateOrderType") // օրինակ
+	const bikeController = require("./bikesController") // օրինակ
+
+	․post("/cars", validation, bikeController.createBike)  // ավելացնել bikes.json զանգվածի մեջ  մոտոցիկլ
+	․get("/cars", bikeController.getBikes) // ստանալ բոլոր մոտոցիկլները
+	.put("/cars/:id", validation, bikeController.updateBike)  // փոփոխել մոտոցիկլի ինֆորմացիան ըստ body_ի
+	.delete("/cars/:id", bikeController.deleteBike)  // jnjel մոտոցիկլի ինֆորմացիան ըստ body_ի
+

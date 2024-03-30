@@ -1,0 +1,151 @@
+switch (e?.type) {
+      case 'new_user':
+        dispatch(setPlayers(e.mafia_game.players))
+        break
+      case 'divide_cards':
+        dispatch(setMafiaRole(e?.data?.role))
+        dispatch(setVoteTime(e?.vote_time))
+        dispatch(setAnswerQuestions(e?.data?.role?.answer_question))
+        dispatch(setLoader(false))
+        navigation.navigate('PlayMafia')
+        break
+      case 'questions':
+        dispatch(setAnswerQuestions(e?.questions))
+        break
+      case 'user_count':
+        dispatch(setCiviliansCount(e?.civilian_count))
+        dispatch(setMafiasCount(e?.mafia_count))
+        dispatch(setPlayers(e?.all_players))
+        break
+      case 'mafia_users':
+        dispatch(
+          setMafiaUsersId(
+            e.mafia_users.reduce(
+              (prevValue, currentValue) => [
+                ...prevValue,
+                { id: currentValue?._id, name: currentValue?.role?.name },
+              ],
+              [],
+            ),
+          ),
+        )
+        break
+      case 'change_time':
+        dispatch(setNight(e.mafia_game.night))
+        nightRef.current = e.mafia_game.night
+        dispatch(setVoteTime(e.mafia_game.vote_time))
+        dispatch(setLoader(false))
+        dispatch(setWaitNight(null))
+        dispatch(setPlayers(e?.all_players))
+
+        break
+      case 'question_answer':
+        dispatch(setQuestionTruthfulness({ question_id: e.question, truthfulness: e.answer }))
+        // console.log('question_answer answersCount', answersCount)
+        // if (answersCount == 1) {
+        //   dispatch(setWaitNight(false))
+        //   dispatch(setAnswersCount(0))
+        // }
+        // setQuestionAnswerState(++questionAnswerState)
+        console.log('mafiaRoleName', mafiaRoleName)
+        if (nightRef.current) {
+          if (questionAnswerState.current == 1) {
+            dispatch(setWaitNight(false))
+            dispatch(setAnswersCount(0))
+            questionAnswerState.current = 0
+          } else if (mafiaRoleName.current != 'Дон') {
+            dispatch(setAnswersCount(1))
+            questionAnswerState.current = 1
+          }
+        }
+
+        break
+      case 'player_out':
+        console.log('type player_out', e)
+
+        const deadUser = e.all_players.filter((user) => {
+          if (!user.status && !alredyDeadedUsers.current?.find((id) => user?._id == id)) {
+            alredyDeadedUsers.current = [...alredyDeadedUsers.current, user._id]
+            return true
+          } else {
+            return false
+          }
+        })
+        deadUser.forEach((user, index) => {
+          deadUser[index].role = e?.players.find((item) => item._id == user?._id)?.role?.name
+        })
+        if (e?.roleDatas?.mafia == 0 || e?.roleDatas?.mafia > e?.roleDatas?.civilian) {
+          break
+        }
+
+        console.log('deadUser', deadUser)
+        dispatch(setDeadUser(deadUser))
+
+        dispatch(setCiviliansCount(e?.roleDatas?.civilian))
+        dispatch(setMafiasCount(e?.roleDatas?.mafia))
+        break
+      case 'equal_votes':
+        dispatch(setLoader(false))
+        dispatch(
+          setEqualVotes({
+            question_id: e?.question_id,
+            first_player: e?.first_player?.user,
+            second_player: e?.second_player?.user,
+          }),
+        )
+        break
+      case 'voted_players':
+        dispatch(setDonVotedPlayers(e?.voted_players))
+        break
+      case 'end_game':
+        dispatch(setLoader(false))
+        dispatch(setWinner(e.winner))
+        break
+      case 'players_rating':
+        dispatch(setPlayersRatings(e.players_rating))
+        break
+
+      default:
+        break
+    }
+    
+    
+    
+answer_question:  {
+  message: {
+    type: 'answer_question',
+    question_id: '640ee6422d4934d87e84d9e3',
+    select_user: '647722a58a3933143da42f57'
+  },
+  user_id: '642181e95184a95c0ba4d8bc',
+  mafia_game_id: '6477228a8a3933143da42f20',
+  mafia: {
+    _id: new ObjectId("6477228a8a3933143da42f20"),
+    vote_time: 5,
+    spy_and_don: false,
+    min_players: 5,
+    user: new ObjectId("64219136e3a868ee5e71a799"),
+    players: [
+      new ObjectId("64219136e3a868ee5e71a799"),
+      new ObjectId("642181e95184a95c0ba4d8bc"),
+      new ObjectId("64218184eb81d13913dc33d0"),
+      new ObjectId("642182105184a95c0ba4d8d1"),
+      new ObjectId("6421814eeb81d13913dc33bb")
+    ],
+    active_players: [
+      new ObjectId("64219136e3a868ee5e71a799"),
+      new ObjectId("642181e95184a95c0ba4d8bc"),
+      new ObjectId("64218184eb81d13913dc33d0"),
+      new ObjectId("642182105184a95c0ba4d8d1"),
+      new ObjectId("6421814eeb81d13913dc33bb")
+    ],
+    clicked_end_time: [],
+    night: true,
+    first_remove_player: false,
+    out_players: [],
+    createdAt: 2023-05-31T10:33:46.990Z,
+    updatedAt: 2023-05-31T10:34:22.299Z,
+    __v: 11,
+    qr_link: 'qr/6477228a8a3933143da42f20.png'
+  }
+}
