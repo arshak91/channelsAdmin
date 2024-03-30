@@ -45,7 +45,7 @@ const login = async ( req, res) => {
     if (!passwordTrue) {
         return res.json({
             status: 0,
-            message: "wrong password"
+            message: "wrong password!!"
         })
     }
     // console.log(user);
