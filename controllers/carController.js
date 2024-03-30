@@ -20,7 +20,7 @@ async function getCars(req, res) {
             }]
         };
 
-        console.log('filter!: ', filter);
+        console.log('filter!!!!: ', filter);
 
         const cars = await Cars.find(filter)
 
