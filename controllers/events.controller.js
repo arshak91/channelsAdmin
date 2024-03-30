@@ -34,7 +34,7 @@ const createEvents = async (req, res) => {
         status: 1,
         data: event
     })
-    console.log("some");
+    console.log("some!!");
 }
 
 const getEventByUser = async (req, res) => {
